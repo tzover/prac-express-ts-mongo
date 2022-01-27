@@ -1,0 +1,29 @@
+version: "3.3"
+services:
+    back:
+        image: ts-base-express-image:latest
+        container_name: asn-tools-back
+        build:
+            context: ./back
+            dockerfile: Dockerfile
+        volumes:
+            - ./back/app:/home/app
+        ports:
+            - ${PORT_BACK}:${PORT_BACK}
+        depends_on:
+            - mongo
+        tty: true
+    mongo:
+        image: mongo-for-express:latest
+        container_name: mongo-for-express
+        build:
+            context: ./mongo
+            dockerfile: Dockerfile
+        volumes:
+            - ./mongo/data/db:/data/db
+            - ./mongo/data/config:/data/config
+        ports:
+            - ${PORT_MONGODB}:${PORT_MONGODB}
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+            MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
